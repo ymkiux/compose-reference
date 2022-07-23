@@ -15,7 +15,7 @@
 val selectListInfo by DataViewModel.uiState.collectAsState()
 val selectIndex by remember{mutableStateOf(mutableListOf(0))}
 dropdownMenu(selectListInfo,selectIndex){v1,v2->
-   selectIndex[0]=v2
+  selectIndex[0]=v2
 }
 ```
 
@@ -24,4 +24,19 @@ dropdownMenu(selectListInfo,selectIndex){v1,v2->
 ```xml
 DataViewModel类uiState为StateFlow状态流 使用之后后者数据集显示随之改变
 ```
+
+#### radioButton
+
+##### 仅有一个
+
+```
+仅需tags initialState radioState参数
+```
+
+##### 多个选一个
+
+```
+仅需tags selectIndex参数
+```
+
 - 其他相关可看注释
