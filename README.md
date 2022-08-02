@@ -11,7 +11,7 @@
 
 #### dropdownMenu
 
-```java
+```kotlin
 val selectListInfo by DataViewModel.uiState.collectAsState()
 val selectIndex by remember{mutableStateOf(mutableListOf(0))}
 dropdownMenu(selectListInfo,selectIndex){v1,v2->
@@ -37,6 +37,25 @@ DataViewModel类uiState为StateFlow状态流 使用之后后者数据集显示�
 
 ```
 仅需tags selectIndex参数
+```
+
+#### Notification
+
+##### 初始化
+
+```kotlin
+fun main() = application {
+    initNotification(
+        appName,
+        painterResource(wxData[0].selectedPath)
+    )
+}
+```
+
+##### 通知事件
+
+```kotlin
+NotificationKt.sendNotification("消息内容")
 ```
 
 - 其他相关可看注释
