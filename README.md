@@ -13,9 +13,9 @@
 
 ```kotlin
 val selectListInfo by DataViewModel.uiState.collectAsState()
-val selectIndex by remember{mutableStateOf(mutableListOf(0))}
-dropdownMenu(selectListInfo,selectIndex){v1,v2->
-  selectIndex[0]=v2
+val selectIndex by remember { mutableStateOf(mutableListOf(0)) }
+dropdownMenu(selectListInfo, selectIndex) { _, s ->
+    selectIndex[0] = s
 }
 ```
 
@@ -29,14 +29,29 @@ DataViewModel类uiState为StateFlow状态流 使用之后后者数据集显示�
 
 ##### 仅有一个
 
-```
-仅需tags initialState radioState参数
+```kotlin
+var oneSelectState by remember { mutableStateOf(false) }
+radioButton(
+    listOf<UiState>(
+        UiState(
+            "单数据测试",
+            oneSelectState
+        )
+    ), oneSetSelectState = {
+        oneSelectState = it
+    })
 ```
 
-##### 多个选一个
+##### 多组选位
 
-```
-仅需tags selectIndex参数
+```kotlin
+val moreSelectState by RadioInfoViewModel.uiState.collectAsState()
+radioButton(
+    moreSelectState
+) { index, state ->
+    //实现单选或者多选逻辑皆可自定义
+    RadioInfo.update(index, state)
+}
 ```
 
 #### Notification

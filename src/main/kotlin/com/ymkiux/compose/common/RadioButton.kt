@@ -3,51 +3,54 @@ package com.ymkiux.compose.common
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 /**
+ * data class form the main purpose of creation is to update the data status in real time
+ */
+data class UiState(val desc: String = "", var selectState: Boolean = false, val time: Long = System.currentTimeMillis())
+
+/**
  * A collection of radio buttons that allow the user to select or deselect an option from a group or a single option
  * @param tags data set
- * @param initialState init select state
  * @param radioButtonColors used to resolve the color used for this in different states
  * @param mainModifier the modifier to be applied to the Row outermost
  * @param childModifier the modifier to be applied to the Row sublevel
- * @param radioState used for this set select is only one option. tags is arrayListOf("")
- * @param selectIndex callback used for select set index
+ * @param oneSetSelectState used for this set select is only one option. tags is arrayListOf("")
+ * @param moreSetSelectState callback used for select set index. when used for single selection, you need to customize the viewModel logic
  */
 @Composable
 fun radioButton(
-    tags: List<String>,
-    initialState: MutableList<Boolean> = mutableListOf(false),
+    tags: List<UiState> = mutableListOf(),
     radioButtonColors: RadioButtonColors = RadioButtonDefaults.colors(MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high)),
     mainModifier: Modifier = Modifier,
     childModifier: Modifier = Modifier,
-    radioState: (Boolean) -> Unit = {},
-    selectIndex: (Int) -> Unit = {}
+    oneSetSelectState: (Boolean) -> Unit = {},
+    moreSetSelectState: (Int, Boolean) -> Unit = { _, _ -> }
 ) {
-    val selectedTag = remember { mutableStateOf(tags[0]) }
-    val radio = derivedStateOf { initialState }
-    Row(modifier = mainModifier) {
-        tags.forEach {
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = childModifier) {
-                RadioButton(
-                    selected = if (tags.size != 1) it == selectedTag.value else radio.value[0],
-                    onClick = {
-                        if (tags.size == 1) {
-                            radio.value[0] = !radio.value[0]
-                            radioState.invoke(radio.value[0])
-                        } else {
-                            selectedTag.value = it
-                            selectIndex.invoke(tags.indexOf(it))
-                        }
-                    },
-                    colors = radioButtonColors
-                )
-                Text(text = it)
+    when (tags.isEmpty()) {
+        true -> throw KotlinNullPointerException("tags can not empty list")
+        false -> {
+            Row(modifier = mainModifier) {
+                tags.forEachIndexed { index, it ->
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = childModifier) {
+                        RadioButton(
+                            selected = tags[index].selectState,
+                            onClick = {
+                                if (tags.size == 1) {
+                                    tags[index].selectState = !tags[index].selectState
+                                    oneSetSelectState.invoke(tags[index].selectState)
+                                } else {
+                                    tags[index].selectState = !it.selectState
+                                    moreSetSelectState.invoke(index, tags[index].selectState)
+                                }
+                            },
+                            colors = radioButtonColors
+                        )
+                        Text(text = it.desc)
+                    }
+                }
             }
         }
     }
