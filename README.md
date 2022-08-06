@@ -73,4 +73,11 @@ fun main() = application {
 NotificationKt.sendNotification("消息内容")
 ```
 
+#### ToolTip
+```kotlin
+tooltip(ToolTipInfo("本地测试")) {
+   Text("DEBUG", color = Color.White)
+}
+```
+
 - 其他相关可看注释
