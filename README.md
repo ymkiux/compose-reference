@@ -79,5 +79,7 @@ tooltip(ToolTipInfo("本地测试")) {
    Text("DEBUG", color = Color.White)
 }
 ```
-
-- 其他相关可看注释
+#### RecycleView
+```text
+作为垂直滚动列表的可组合控件 详情使用看注释即可
+```
